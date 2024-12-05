@@ -42,7 +42,7 @@ func main(){
 		
 		localRuleGraph := make(map[string][]string)
 		//Global rule map contains cycles -- Extract only rules that pertain to the input data
-		//--search for each part of numbers in the globalrule set and add the rule to localset if found
+		//--search for each pair of numbers in the globalrule set and add the rule to localset if found
 		for _, part1 := range parts {
 			for _, part2 := range parts {
 				_, exists := ruleMap[part1]
