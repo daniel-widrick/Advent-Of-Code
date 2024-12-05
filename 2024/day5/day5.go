@@ -20,6 +20,7 @@ func main(){
 	ruleMap := make(map[string][]string)
 	scanner := bufio.NewScanner(file)
 
+	//Build Global Rule map
 	for scanner.Scan() {
 		line := scanner.Text()
 		if line == "" {
@@ -35,11 +36,13 @@ func main(){
 	for scanner.Scan() {
 		line := scanner.Text()
 		parts := strings.Split(line, ",")
+		log.Printf("line: %v", parts)
 		sorted := make([]string, len(parts))
 		copy(sorted, parts)
-		log.Printf("line: %v", parts)
+		
 		localRuleGraph := make(map[string][]string)
-
+		//Global rule map contains cycles -- Extract only rules that pertain to the input data
+		//--search for each part of numbers in the globalrule set and add the rule to localset if found
 		for _, part1 := range parts {
 			for _, part2 := range parts {
 				_, exists := ruleMap[part1]
@@ -48,8 +51,9 @@ func main(){
 				}
 			}
 		}
+
 		sort.Slice(sorted, func(i, j int) bool {
-			return len(localRuleGraph[sorted[i]]) > len(localRuleGraph[sorted[j]])
+			return len(localRuleGraph[sorted[i]]) > len(localRuleGraph[sorted[j]]) //Results in ascending order
 		})
 		log.Printf("Sort: %v", sorted)
 		log.Printf("%v", localRuleGraph)
@@ -57,9 +61,9 @@ func main(){
 		if err != nil {
 			log.Printf("Error parsing int: %v, %v", sorted, err)
 		}
-		if slices.Equal(parts,sorted) {
+		if slices.Equal(parts,sorted) { //Is correctly ordered
 			middleSumOrdered += middle
-		} else {
+		} else { //Was out of order
 			middleSumFixed += middle
 		}
 	}
